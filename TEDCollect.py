@@ -6,28 +6,31 @@ import time
 
 app = Flask(__name__)
 
-DATA_SERVER_IP = '192.168.0.5'
+DATA_SERVER_IP = 'http://192.168.0.221'
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['POST', 'GET'])
 def hello_world():
 	print "Hello there"
 	return 'Hello World!'
 
-@app.route('/activation', methods=['POST'])
+@app.route('/activation', methods=['POST', 'GET'])
 def activate():
 	# Need the sleep otherwise TED errors out
-	time.sleep(4) 
+	time.sleep(2) 
 	xml_response = """
 			<ted5000ActivationResponse>
 				<PostServer>{0}</PostServer>
 				<UseSSL>F</UseSSL>
 				<PostPort>5000</PostPort>
 				<PostURL>/post_readings</PostURL>
-				<AuthToken>MySecurityToten</AuthToken>
+				<AuthToken>1234</AuthToken>
 				<PostRate>1</PostRate>
 				<HighPrec>T</HighPrec>
+				<SSLKey>NOT IMPLEMENTED</SSLKey>
 			</ted5000ActivationResponse>""".format(DATA_SERVER_IP)
-	return Response(xml_response, mimetype='text/xml')
+	resp = Response(xml_response, mimetype='text/xml')
+	print resp
+	return resp
 
 @app.route('/post_readings', methods=['POST'])
 def get_readings():
